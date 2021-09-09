@@ -1,0 +1,73 @@
+import pygame
+import requests
+
+WIDTH = 825
+BACKGROUND_COLOR = (251, 247, 245)
+GIVEN_NUMBERS = (0, 0, 0)
+BUFFER = 5
+
+response = requests.get("https://sugoku.herokuapp.com/board?difficulty=easy")
+grid = response.json()['board']
+grid_original = [[grid[x][y] for y in range(len(grid[0]))] for x in range(len(grid))]
+
+
+def insert(win, position):
+    i, j = position[1], position[0]
+    font = pygame.font.SysFont('Arial', 50)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+            if event.type == pygame.KEYDOWN:
+                if grid_original[i - 1][j - 1] != 0:
+                    return
+                if event.key == 48:
+                    grid[i - 1][j - 1] = event.key - 48
+                    pygame.draw.rect(win, BACKGROUND_COLOR, (
+                    position[0] * 75 + BUFFER, position[1] * 75 + BUFFER, 75 - 2 * BUFFER, 75 - 2 * BUFFER))
+                    pygame.display.update()
+                    return
+                if 0 < event.key - 48 < 10:
+                    pygame.draw.rect(win, BACKGROUND_COLOR, (
+                    position[0] * 75 + BUFFER, position[1] * 75 + BUFFER, 75 - 2 * BUFFER, 75 - 2 * BUFFER))
+                    value = font.render(str(event.key - 48), True, (255, 0, 0))
+                    win.blit(value, (position[0] * 75 + 25, position[1] * 75 + 15))
+                    grid[i - 1][j - 1] = event.key - 48
+                    pygame.display.update()
+                    return
+                return
+
+
+def main():
+    pygame.init()
+    win = pygame.display.set_mode((WIDTH, WIDTH))
+    win.fill(BACKGROUND_COLOR)
+    pygame.display.set_caption("Sudoku")
+    font = pygame.font.SysFont('Arial', 50)
+
+    for i in range(0, 10):
+        if i % 3 == 0:
+            pygame.draw.line(win, (0, 0, 0), (75 + 75 * i, 75), (75 + 75 * i, 750), 6)
+            pygame.draw.line(win, (0, 0, 0), (75, 75 + 75 * i), (750, 75 + 75 * i), 6)
+        pygame.draw.line(win, (0, 0, 0), (75 + 75 * i, 75), (75 + 75 * i, 750), 3)
+        pygame.draw.line(win, (0, 0, 0), (75, 75 + 75 * i), (750, 75 + 75 * i), 3)
+    pygame.display.update()
+
+    for i in range(0, len(grid[0])):
+        for j in range(0, len(grid[0])):
+            if 0 < grid[i][j] < 10:
+                value = font.render(str(grid[i][j]), True, GIVEN_NUMBERS)
+                win.blit(value, ((j + 1) * 75 + 25, (i + 1) * 75 + 15))
+    pygame.display.update()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                pos = pygame.mouse.get_pos()
+                insert(win, (pos[0] // 75, pos[1] // 75))
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
+
+
+main()
