@@ -1,0 +1,90 @@
+board = {'7': ' ', '8': ' ', '9': ' ',
+         '4': ' ', '5': ' ', '6': ' ',
+         '1': ' ', '2': ' ', '3': ' '}
+
+board_keys = []
+
+for key in board:
+    board_keys.append(key)
+
+def print_game_board(board):
+    print(board['7'] + ' | ' + board['8'] + ' | ' + board['9'])
+    print('--+---+--')
+    print(board['4'] + ' | ' + board['5'] + ' | ' + board['6'])
+    print('--+---+--')
+    print(board['1'] + ' | ' + board['2'] + ' | ' + board['3'])
+
+def play():
+    player = 'X'
+    count = 0
+
+    for i in range(10):
+        print_game_board(board)
+        print("\nIt's your turn, " + player + " Make your move by selecting a number between 1 and 9. \n\n7 | 8 | 9\n--+---+--\n4 | 5 | 6\n--+---+--\n1 | 2 | 3\n")
+
+        move = input()
+
+        if board[move] == ' ':
+            board[move] = player
+            count += 1
+        else:
+            print("You can't play there. That spot is taken. What move do you want to make?")
+            continue
+
+        if count >= 5:
+            # check for win in rows
+            if board['7'] == board['8'] == board['9'] != ' ':
+                print_game_board(board)
+                print("\nGame Over.\n\nCongratulations Player " + player + ". You win!\n")
+                break
+            elif board['4'] == board['5'] == board['6'] != ' ':
+                print_game_board(board)
+                print("\nGame Over.\n\nCongratulations Player " + player + ". You win!\n")
+                break
+            elif board['1'] == board['2'] == board['3'] != ' ':
+                print_game_board(board)
+                print("\nGame Over.\n\nCongratulations Player " + player + ". You win!\n")
+                break
+
+            # check for win in columns
+            elif board['7'] == board['4'] == board['1'] != ' ':
+                print_game_board(board)
+                print("\nGame Over.\n\nCongratulations Player " + player + ". You win!\n")
+                break
+            elif board['8'] == board['5'] == board['2'] != ' ':
+                print_game_board(board)
+                print("\nGame Over.\n\nCongratulations Player " + player + ". You win!\n")
+                break
+            elif board['9'] == board['6'] == board['3'] != ' ':
+                print_game_board(board)
+                print("\nGame Over.\n\nCongratulations Player " + player + ". You win!\n")
+                break
+
+            # check for win on diagnals
+            elif board['7'] == board['5'] == board['3'] != ' ':
+                print_game_board(board)
+                print("\nGame Over.\n\nCongratulations Player " + player + ". You win!\n\n")
+                break
+            elif board['9'] == board['5'] == board['1'] != ' ':
+                print_game_board(board)
+                print("\nGame Over.\n\nCongratulations Player " + player + ". You win!\n\n")
+                break
+
+        if count == 9:
+            print("Game Over. It's a tie!")
+
+        if player == 'X':
+            player = 'O'
+        else:
+            player = 'X'
+
+    restart = input("Do you want to play again? Enter 'Y' or 'N'")
+    if restart == 'y' or restart == 'Y':
+        for key in board_keys:
+            board[key] = " "
+        play()
+
+if __name__ == "__main__":
+    play()
+
+
