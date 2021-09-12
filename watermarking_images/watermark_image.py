@@ -1,7 +1,6 @@
 from PIL import Image, ImageFont, ImageDraw
-
-def watermark_text(input_image_path, output_image_path, text, pos):
-    photo = Image.open(input_image_path)
+def add_watermark_text(original_input_path, save_image_path, text, pos):
+    photo = Image.open(original_input_path)
 
     drawing = ImageDraw.Draw(photo)
 
@@ -9,8 +8,8 @@ def watermark_text(input_image_path, output_image_path, text, pos):
     font = ImageFont.truetype("Satisfy-Regular.ttf", 40)
     drawing.text(pos, text, fill=black, font=font)
     photo.show()
-    photo.save(output_image_path)
+    photo.save(save_image_path)
 
 if __name__ == '__main__':
     img = 'tour_da_parish.jpg'
-    watermark_text(img, 'tour_da_parish_watermarked.jpg', text='Natalie Misasi', pos=(5, 5))
+    add_watermark_text(img, 'tour_da_parish_watermarked.jpg', text='Natalie Misasi', pos=(5, 5))
